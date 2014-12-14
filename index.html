@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <title>Cadastre Grenoble</title>
+        <link href="css/style.css" rel="stylesheet" type="text/css">
+        <link href='https://api.tiles.mapbox.com/mapbox.js/v1.6.2/mapbox.css' rel='stylesheet' />
+        <link href='//api.tiles.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v0.0.2/leaflet.fullscreen.css' rel='stylesheet' />
+        <link rel="stylesheet" href="magnific-popup/magnific-popup.css"> 
+        <script>
+		  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+		  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+		  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+		  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+		  ga('create', 'UA-49256383-1', 'olympe.in');
+		  ga('send', 'pageview');
+
+		</script>
+    </head>
+
+    <body>
+    	<div id="texte">
+			<h1>Grenoble : une ville extensible ?</h1>
+			<p class="chapo">
+				Grâce aux données cadastrales et fiscales, il est possible de visualiser l'extension de la ville de Grenoble. Encore nichée jusqu'au XXème siècle au pied de sa "Bastille", la capitale des Alpes s'est ensuite étendue au delà de ses murailles. Les Jeux Olympiques de 1968 ont accéléré l'urbanisation de la plaine. Aujourd'hui, la densification de la cuvette est plus que jamais polémique, avec des accusations de <a href="http://www.lavantpost.info/betonisation-grenoble-beton/" target="_blank">"bétonisation"</a> venant de gauche comme de droite.<br /><br />
+
+				Sur la carte ci-contre, les batiments sont colorés selon la première date de construction référencée sur leur parcelle cadastrale. Cette dernière prend la même couleur, en plus clair. La vieille ville apparait ainsi en rouge et orange, et les constructions plus récentes prennent des teintes vertes et bleues. Si on peut voir que les projets d'urbanisme deviennent de plus en plus imposants, à l'image du Stade des Alpes ou du Polygone Scientifique, la ville semble avoir atteint sa surface actuelle avec la construction de la Villeneuve et du Village Olympique, loin au sud, qui ont ensuite été rejointe par de nouveaux projets.<br /><br />
+
+				Cette carte permet d'avoir une vue d'ensemble, mais les données qui la compose sont trop souvent parcellaires et certaines peuvent être inexactes ou fausses. Vous pouvez envoyer une correction en cliquant sur une parcelle, qui sera affichée lors d'une prochaine mise à jour. En cliquant sur l'icône des calques, vous pouvez afficher la vue "Mandatures" qui affiche les parcelles et les batiments dont la première date de construction correspond au mandat d'un maire de Grenoble depuis 1959. Ces données doivent être prises avec prudence car elles souffrent des mêmes inexactitudes que précédemment et ne permettent pas de voir quel maire est à l'origine de la construction d'un projet.<br /><br />
+
+				<p class="signature">Jules Bonnard<br />
+					<a href="mailto:julesbonnard@gmail.com">Me contacter</a>
+				</p>
+				<p class="noire">
+					Ce travail est inspiré des travaux réalisés sur les villes de <a href="http://bdon.org/2013/09/12/building-age-nyc/" target="_blank">New York</a>, <a href="http://bklynr.com/block-by-block-brooklyns-past-and-present/" target="_blank">Brooklyn</a>, <a href="http://dealloc.me/2013/06/30/the-making-of-pdx.html" target="_blank">Portland</a> et <a href="http://dev.citysdk.waag.org/buildings/" target="_blank">aux Pays-Bas</a>.<br />
+					Il est réalisé grâce aux logiciels et librairies <a href="http://www.qgis.org/en/site/" target="_blank">QGis</a>, <a href="https://www.mapbox.com/tilemill/" target="_blank">TileMill</a> et <a href="https://www.mapbox.com/" target="_blank">MapboxJS</a>.<br />
+					Je ne peux que vous conseiller la lecture de l'excellent tutoriel de Raphi <a href="http://blog.m0le.net/2014/02/08/autopsie-dune-dataviz-5-1-gagner-du-temps-sur-qgis/" target="_blank">"Autopsie d'une dataviz"</a>.
+				</p>
+			</p>
+		</div>
+    	<div id="map"></div>
+		<div id="chrono_legend" class='legend-content' style='display: none;'>
+			<div class='my-legend'>
+				<div class='legend-title'>Extension de Grenoble</div>
+				<div class='legend-scale'>
+					<ul class='legend-labels'>
+						<li><span style='background:#9e0142;'></span>Constructions antérieures à 1600</li>
+						<li><span style='background:#d53e4f;'></span>de 1600 à 1700</li>
+						<li><span style='background:#f46d43;'></span>de 1700 à 1800</li>
+						<li><span style='background:#fdae61;'></span>de 1800 à 1850</li>
+						<li><span style='background:#fee08b;'></span>de 1850 à 1900</li>
+						<li><span style='background:#ffffbf;'></span>de 1900 à 1920</li>
+						<li><span style='background:#e6f598;'></span>de 1920 à 1940</li>
+						<li><span style='background:#abdda4;'></span>de 1940 à 1960</li>
+						<li><span style='background:#66c2a5;'></span>de 1960 à 1980</li>
+						<li><span style='background:#3288bd;'></span>de 1980 à 2000</li>
+						<li><span style='background:#5e4fa2;'></span>de 2000 à 2012</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+		<div id="mandatures_legend" class='legend-content' style='display: none;'>
+			<div class='my-legend'>
+				<div class='legend-title'>Quel maire a le plus construit Grenoble ?</div>
+				<div class='legend-scale'>
+					<ul class='legend-labels'>
+						<li><span style='background:#aaa;'></span>Avant 1959</li>
+						<li><span style='background:#1b9e77;'></span>Albert Michallon</li>
+						<li><span style='background:#d95f02;'></span>Hubert Dubedout</li>
+						<li><span style='background:#7570b3;'></span>Alain Carignon</li>
+						<li><span style='background:#e7298a;'></span>Michel Destot</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+		<div id="source_legend" class='legend-content' style='display: none;'>
+			<div class='my-legend'>
+				<div class='legend-source'>
+					<strong>Données cadastrales</strong><br />Ville de Grenoble - Service Géomatique<br />
+					<strong>Données chronologiques</strong><br />Direction générale des finances publiques
+				</div>
+			</div>
+		</div>
+    	
+    </body>
+    <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+    <script src='https://api.tiles.mapbox.com/mapbox.js/v1.6.2/mapbox.js'></script>
+    <script src='//api.tiles.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v0.0.2/Leaflet.fullscreen.min.js'></script>
+    <script src='//api.tiles.mapbox.com/mapbox.js/plugins/leaflet-hash/v0.2.1/leaflet-hash.js'></script>
+    <script src="magnific-popup/jquery.magnific-popup.js"></script> 
+    <script src="js/myscript.js"></script>
+</html>
